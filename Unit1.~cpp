@@ -1,0 +1,85 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#include <stdio.h>
+#include <conio.h>
+#pragma hdrstop
+
+//---------------------------------------------------------------------------
+
+#pragma argsused
+struct Graph {int size; char **names; int **spisok;} *graph1;
+Graph* load_graph(char path)
+{
+	FILE *in = fopen(path, "r");
+	if (!in) {
+		printf("Error: Cannot open file '%s'.\n", path);
+		exit(1);
+	}
+
+	Graph *graph = new Graph;
+
+	// —читываем количество вершин.
+	//
+	fscanf(in, "%d", &graph->size);
+
+	// —читываем имена вершин.
+	//
+	graph->names = new char*[graph->size];
+        (int i;i<graph->size;i++) {
+		char buf[60];
+		fscanf(in, "%s", buf);
+		graph->names[i] = strdup(buf); //strdup - функци€, котора€ записывает строку buf в поле names, при этом автоматически выдел€ет динамическую пам€ть
+	}
+	// —оздаем список смежности.
+	//
+        graph->spisok = new int*[graph->size];
+        for(int i=0;i<graph->size;i++){
+                graph->spisok[i] = new int[1];
+                graph->spisok[i][0] = -1; // все ма
+        }
+	// —читываем список смежности.
+	//
+        int numberofel;
+        for(i=0;i<graph->size;i++){
+                fscanf(in, '%d', numberofel); //считываем кол-во смежных данной вершине вершин
+                if(numberofel>0){ //если это кол-во больше 0
+                        delete graph->spisok[i][1]; //то удал€ем строку списка
+                        graph->spisok[i]=new[numberofel]; //и добавл€ем новую с необходимым кол-вом вершин
+                        for(int j=0;j<numberofel;j++){
+                                fscanf(in, '%d', graph->spisok[i][j]);
+                        }
+                }
+                else continue;
+        }
+	return graph;
+}
+int Searching_vertexes(Graph *graph){
+        for(int i=0;i<graph->size;i++){
+                for(int j=0;j<)
+}
+int run_testcase(int number, char path){
+        *graph1=load_graph(path);
+        int c;
+        for(int i=0;i<graph1->size;i++){
+                if(graph1->spisok[i].[0]==0){
+                        c=2;
+                        return c;
+                }
+
+}
+void inf(int c){
+
+}
+int main(int argc, char* argv[])
+{
+        run_testcase(1, "graph1.txt");
+        inf
+	run_testcase(2, "graph2.txt");
+	run_testcase(3, "graph3.txt");
+	run_testcase(4, "graph4.txt");
+	run_testcase(5, "graph5.txt");
+        return 0;
+}
+//---------------------------------------------------------------------------
+ 
