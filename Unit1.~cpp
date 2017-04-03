@@ -3,12 +3,13 @@
 #include <vcl.h>
 #include <stdio.h>
 #include <conio.h>
+#include <fstream.h>
 #pragma hdrstop
 
 //---------------------------------------------------------------------------
 
 #pragma argsused
-struct Graph {int size; char **names; int **spisok;} *graph1;
+struct Graph {int size; char **names; int **spisok; int *sm} *graph1;
 Graph* load_graph(char path)
 {
 	FILE *in = fopen(path, "r");
@@ -36,7 +37,7 @@ Graph* load_graph(char path)
         graph->spisok = new int*[graph->size];
         for(int i=0;i<graph->size;i++){
                 graph->spisok[i] = new int[1];
-                graph->spisok[i][0] = -1; // все ма
+                graph->spisok[i][0] = -1; // все массивы получают первый элемент, равный -1 (вершины с таким номером не существует)
         }
 	// Считываем список смежности.
 	//
@@ -54,19 +55,17 @@ Graph* load_graph(char path)
         }
 	return graph;
 }
-int Searching_vertexes(Graph *graph){
-        for(int i=0;i<graph->size;i++){
-                for(int j=0;j<)
-}
 int run_testcase(int number, char path){
+        Graph *graph1;
         *graph1=load_graph(path);
         int c;
-        for(int i=0;i<graph1->size;i++){
-                if(graph1->spisok[i].[0]==0){
-                        c=2;
-                        return c;
-                }
-
+        for(int i=0;i<graph1->size;i++)
+        if(graph1->spisok[i].[0]=-1){
+                c=2;
+                return c;
+        }
+        c=1;
+        return c;
 }
 void inf(int c){
 
