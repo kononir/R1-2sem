@@ -27,7 +27,7 @@ Graph* load_graph(char path)
 	// Считываем имена вершин.
 	//
 	graph->names = new char*[graph->size];
-        (int i;i<graph->size;i++) {
+        for(int i=0;i<graph->size;i++) {
 		char buf[60];
 		fscanf(in, "%s", buf);
 		graph->names[i] = strdup(buf); //strdup - функция, которая записывает строку buf в поле names, при этом автоматически выделяет динамическую память
@@ -56,9 +56,10 @@ Graph* load_graph(char path)
 	return graph;
 }
 int run_testcase(int number, char path){
+        int c;
         Graph *graph1;
         *graph1=load_graph(path);
-        int c;
+        show_graph(graph1);
         for(int i=0;i<graph1->size;i++)
         if(graph1->spisok[i].[0]=-1){
                 c=2;
@@ -67,13 +68,16 @@ int run_testcase(int number, char path){
         c=1;
         return c;
 }
-void inf(int c){
-
+void show_graph(Graph *graph){
+        cout<<"kolichestvo vershin"<<endl;
+        for(int i=0;i<graph1->size;i++)
+        cout<<graph1->names[i]<<" ";
+        for
 }
 int main(int argc, char* argv[])
 {
         run_testcase(1, "graph1.txt");
-        inf
+
 	run_testcase(2, "graph2.txt");
 	run_testcase(3, "graph3.txt");
 	run_testcase(4, "graph4.txt");
