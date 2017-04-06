@@ -36,9 +36,15 @@ Graph *load_graph(const char *path)
         graph->sm = new int[graph->size];
 	// Считываем список смежности.
 	//
-        int numberofel;
+        int numberofel=0;
         for(int i=0;i<graph->size;i++){
-                fscanf(in, "%d", &numberofel); //считываем кол-во смежных данной вершине вершин
+                char a;
+                M:
+                fgets(&a, sizeof(char), in); //считываем кол-во смежных данной вершине вершин
+                if(a=='|'){
+                        numberofel++;
+                        goto M;
+                }
                 graph->sm[i]=numberofel;
                 if(numberofel>0){ //если это кол-во больше 0
                         delete graph->spisok[i]; //то удаляем строку списка
