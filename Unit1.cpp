@@ -38,12 +38,13 @@ Graph *load_graph(const char *path)
 	//
         int numberofel;
         for(int i=0;i<graph->size;i++){
-                fscanf(in, "%d", numberofel); //считываем кол-во смежных данной вершине вершин
+                fscanf(in, "%d", &numberofel); //считываем кол-во смежных данной вершине вершин
+                graph->sm[i]=numberofel;
                 if(numberofel>0){ //если это кол-во больше 0
                         delete graph->spisok[i]; //то удаляем строку списка
                         graph->spisok[i]=new int[numberofel]; //и добавляем новую с необходимым кол-вом вершин
                         for(int j=0;j<numberofel;j++){
-                                fscanf(in, "%d", graph->spisok[i][j]);
+                                fscanf(in, "%d", &graph->spisok[i][j]);
                         }
                 }
                 else continue;
@@ -51,13 +52,13 @@ Graph *load_graph(const char *path)
 	return graph;
 }
 void show_graph(Graph *graph){ //выводим граф, как список смежности
-        cout<<"graph:"<<endl;
-        for(int i=0;i<graph1->size;i++){ //для каждой вершины
+        cout<<"\ngraph:\n"<<endl;
+        for(int i=0;i<graph->size;i++){ //для каждой вершины
                 cout<<i+1<<"->";
-                for(int j=0;j<graph1->sm[i]-1;j++){ //выводим номера смежных ей вершин (до предпоследней включительно)
-                        cout<<graph1->spisok[i][j]<<" , ";
+                for(int j=0;j<graph->sm[i]-1;j++){ //выводим номера смежных ей вершин (до предпоследней включительно)
+                        cout<<graph->spisok[i][j]+1<<" , ";
                 }
-                cout<<graph1->spisok[i][graph->sm[i]-1]<<endl; //выводим номер последней смежной данной вершине вершины
+                cout<<graph->spisok[i][graph->sm[i]-1]+1<<"\n\n"; //выводим номер последней смежной данной вершине вершины
         }
 }
 void run_testcase(int number, const char *path){
@@ -67,11 +68,11 @@ void run_testcase(int number, const char *path){
         show_graph(graph1);
         for(int i=0;i<graph1->size;i++){
                 if(graph1->spisok[i][0]==-1){
-                        cout<<"Ne svyzniy graf"<<endl;
+                        cout<<"Otvet:"<<endl<<"Ne svyzniy graf!"<<endl;
                         return;
                 }
         }
-        cout<<"Svyzniy graf"<<endl;
+        cout<<"Otvet:"<<endl<<"Svyzniy graf!"<<endl;
 }
 int main(int argc, char* argv[])
 {
