@@ -3,13 +3,15 @@
 #include <vcl.h>
 #include <stdio.h>
 #include <conio.h>
+#include <io.h>
+#include <fstream.h>
 #include <iostream.h>
 #pragma hdrstop
-
+struct Graph {int size; int **spisok; int *sm;} *graph1, *graph;
+void Number_of_vertexes(FILE*, const char*);
 //---------------------------------------------------------------------------
 
 #pragma argsused
-struct Graph {int size; int **spisok; int *sm;} *graph1;
 Graph *load_graph(const char *path)
 {
 	FILE *in = fopen(path, "r");
@@ -18,67 +20,72 @@ Graph *load_graph(const char *path)
 		exit(1);
 	}
 
-	Graph *graph = new Graph;
+        graph = new Graph;
 
 	// Считываем количество вершин.
 	//
 	fscanf(in, "%d", &graph->size);
-
+        fgetc(in); //пропускаем 1 символ(переходим на первую строку непосредственно записи графа
 	// Вместо имён вершин - числа.
 
 	// Создаем список смежности.
 	//
-        graph->spisok = new int*[graph->size];
-        for(int i=0;i<graph->size;i++){
+        graph->spisok = new int*[graph->size+1];
+        for(int i=1;i<graph->size+1;i++){
                 graph->spisok[i] = new int[1];
                 graph->spisok[i][0] = -1; // все массивы получают первый элемент, равный -1 (вершины с таким номером не существует)
         }
-        graph->sm = new int[graph->size];
+        graph->sm = new int[graph->size+1];
 	// Считываем список смежности.
 	//
-        int numberofel=0;
-        for(int i=0;i<graph->size;i++){
-                char a;
-                M:
-                fgets(&a, sizeof(char), in); //считываем кол-во смежных данной вершине вершин
-                if(a=='|'){
-                        numberofel++;
-                        goto M;
-                }
-                graph->sm[i]=numberofel;
-                if(numberofel>0){ //если это кол-во больше 0
+        Number_of_vertexes(in, path);
+        for(int i=1;i<graph->size+1;i++){
+                if(graph->sm[i]>0){ //если это кол-во больше 0
+                        for(int i=0; i<2; i++) fgetc(in); //пропускаем 2 символа
                         delete graph->spisok[i]; //то удаляем строку списка
-                        graph->spisok[i]=new int[numberofel]; //и добавляем новую с необходимым кол-вом вершин
-                        for(int j=0;j<numberofel;j++){
-                                fscanf(in, "%d", &graph->spisok[i][j]);
+                        graph->spisok[i]=new int[graph->sm[i]]; //и добавляем новую с необходимым кол-вом вершин
+                        for(int j=0;j<graph->sm[i];j++){
+                                fscanf(in, "%i", &graph->spisok[i][j]);
                         }
                 }
                 else continue;
         }
+        fclose(in);
 	return graph;
 }
 void show_graph(Graph *graph){ //выводим граф, как список смежности
+        int a;
         cout<<"\ngraph:\n"<<endl;
-        for(int i=0;i<graph->size;i++){ //для каждой вершины
-                cout<<i+1<<"->";
-                for(int j=0;j<graph->sm[i]-1;j++){ //выводим номера смежных ей вершин (до предпоследней включительно)
-                        cout<<graph->spisok[i][j]+1<<" , ";
+        for(int i=1;i<graph->size+1;i++){ //для каждой вершины
+                cout<<i<<"->";
+                if(graph->sm[i]==0){
+                        cout<<endl;
+                        continue;
                 }
-                cout<<graph->spisok[i][graph->sm[i]-1]+1<<"\n\n"; //выводим номер последней смежной данной вершине вершины
+                for(int j=0;j<graph->sm[i]-1;j++){ //выводим номера смежных ей вершин (до предпоследней включительно)
+                        cout<<graph->spisok[i][j]<<" , ";
+                }
+                a=graph->spisok[i][graph->sm[i]-1];
+                cout<<a<<endl; //выводим номер последней смежной данной вершине вершины
         }
 }
 void run_testcase(int number, const char *path){
-        int c;
+        int c, num=0;
         Graph *graph1;
         graph1=load_graph(path);
         show_graph(graph1);
-        for(int i=0;i<graph1->size;i++){
+        for(int i=1;i<graph1->size+1;i++){
                 if(graph1->spisok[i][0]==-1){
                         cout<<"Otvet:"<<endl<<"Ne svyzniy graf!"<<endl;
                         return;
                 }
+                else num++;
         }
-        cout<<"Otvet:"<<endl<<"Svyzniy graf!"<<endl;
+        if(num==graph1->size){
+                cout<<"Otvet:"<<endl<<"Svyzniy graf!"<<endl;
+                return;
+        }
+        cout<<"Nevernie dannie!"<<endl;
 }
 int main(int argc, char* argv[])
 {
@@ -89,6 +96,26 @@ int main(int argc, char* argv[])
 	run_testcase(5, "graph5.txt");
         getch();
         return 0;
+}
+void Number_of_vertexes(FILE *in, const char *path)//считываем кол-во смежных данным вершинам вершин
+{
+        int numberofel;
+        char a;
+        for(int i=1;i<graph->size+1;i++){
+        numberofel=0;
+        for(int i=0; i<2; i++) fgetc(in); //пропускаем 2 символа
+        M:
+                a=fgetc(in);
+                if(a==' ') goto M;
+                if(a!='\n'){
+                        numberofel++;
+                        goto M;
+                }
+                graph->sm[i]=numberofel;
+        }
+        fclose(in);
+        in=fopen(path, "r");
+        fseek(in, sizeof(int), 0);
 }
 //---------------------------------------------------------------------------
  
