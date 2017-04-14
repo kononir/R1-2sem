@@ -7,7 +7,7 @@
 #include <fstream.h>
 #include <iostream.h>
 #pragma hdrstop
-struct Graph {int size; int **spisok; char **names; int *sm;} *graph1, *graph;
+struct Graph {int size; int **spisok; int *sm;} *graph1, *graph;
 void Delete_graphs(void);
 void Number_of_vertexes(FILE*, const char*);
 //---------------------------------------------------------------------------
@@ -26,16 +26,9 @@ Graph *load_graph(const char *path)
 	// Считываем количество вершин.
 	//
 	fscanf(in, "%d", &graph->size);
-
+        fgetc(in);
         // Считываем имена вершин.
 	//
-	graph->names = new char*[graph->size];
-	for(int i=1;i<graph->size+1;i++){
-		char buf[2];
-		fscanf(in, "%s", buf);
-		graph->names[i] = strdup(buf);
-                cout<<graph->names[i];
-	}
 
 	// Создаем список смежности и массив кол-в смежных вершин.
 	//
@@ -67,17 +60,17 @@ void show_graph(Graph *graph){ //выводим граф, как список смежности
         int a, b;
         cout<<"\ngraph:\n"<<endl;
         for(int i=1;i<graph->size+1;i++){ //для каждой вершины
-                cout<<graph->names[i][0]<<"->";
+                cout<<i<<"->";
                 if(graph->sm[i]==0){
                         cout<<endl;
                         continue;
                 }
                 for(int j=0;j<graph->sm[i]-1;j++){ //выводим номера смежных ей вершин (до предпоследней включительно)
                         b=graph->spisok[i][j];
-                        cout<<graph->names[b][0]<<" , ";
+                        cout<<b<<" , ";
                 }
                 a=graph->spisok[i][graph->sm[i]-1];
-                cout<<graph->names[a][0]<<endl; //выводим номер последней смежной данной вершине вершины
+                cout<<a<<endl; //выводим номер последней смежной данной вершине вершины
         }
 }
 void run_testcase(int number, const char *path){
@@ -132,17 +125,12 @@ void Number_of_vertexes(FILE *in, const char *path)//считываем кол-во смежных да
         }
         fclose(in);
         in=fopen(path, "r");
-        size=sizeof(int)+((graph->size)*(sizeof(char))*2)+2; //+1 - т.к.
-        fseek(in, size, 0);
+        for(int i=0; i<2; i++) fgetc(in);
 }
 void Delete_graphs()
 {
         delete graph1;
-        for(int i=1;i<graph->size+1;i++){
-                delete graph->names[i];
-                delete graph->spisok[i];
-        }
-        delete graph->names;
+        for(int i=1;i<graph->size+1;i++) delete graph->spisok[i];
         delete graph->spisok;
         delete graph->sm;
         delete graph;
